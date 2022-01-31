@@ -1,0 +1,10 @@
+apiVersion: v2
+name: traefik
+version: 1.0.0
+appVersion: 1.0.0
+description: A Helm chart to deploy traefik ingress controller
+
+dependencies:
+- name: traefik
+  version: 10.3.2 
+  repository:  https://helm.traefik.io/traefik

@@ -1,12 +1,18 @@
 # HELM Chart installation
 
-## Add Helm Repository
+## Add Helm Repositories
 
 ```bash
 ## Install repository
 helm3 repo add jsa4000 https://jsa4000.github.io/helm-charts
+helm3 repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm3 repo add traefik https://helm.traefik.io/traefik
+helm3 repo add bitnami https://charts.bitnami.com/bitnami
 
 # List all chart and current version
+helm3 repo update
+
+# Get all charts from a repo
 helm3 search repo jsa4000
 ```
 
@@ -14,29 +20,25 @@ helm3 search repo jsa4000
 
 ```bash
 ## Install `traefik` Chart into `tools` namespace
-helm3 install -n tools --create-namespace traefik traefik/traefik --version 10.3.2 -f manifests/traefik-values.yaml
+helm3 install traefik -n tools --create-namespace --dependency-update tools/traefik
 
 ## Install `kube-prometheus-stack` Chart into `monitoring` namespace
-helm3 install -n monitoring --create-namespace prometheus prometheus-community/kube-prometheus-stack --version 18.0.6 \
---set 'prometheus-node-exporter.hostRootFsMount=false'
+helm3 install prometheus-stack -n monitoring --create-namespace --dependency-update tools/prometheus-stack 
 
 # Install MongoDB chart into datastore namespace
-helm3 install mongo --namespace datastore --create-namespace bitnami/mongodb --version 10.19.0 -f manifests/mongodb-values.yaml
+helm3 install mongodb -n datastore --create-namespace --dependency-update tools/mongodb
 ```
-
+k get
 Uninstall
 
 ```bash
-# Export manifest path
-export MANIFEST_DIR=manifests
-
-## Install `traefik` Chart into `tools` namespace
+## Delete `traefik` Chart
 helm3 delete traefik -n tools
 
-## Install `kube-prometheus-stack` Chart into `monitoring` namespace
-helm3 delete -n monitoring prometheus
+## Delete `kube-prometheus-stack` Chart 
+helm3 delete prometheus -n monitoring 
 
-# Install MongoDB chart into datastore namespace
+# Delete MongoDB chart
 helm3 delete mongo -n datastore
 ```
 
@@ -45,16 +47,16 @@ helm3 delete mongo -n datastore
 
 ```bash
 # Install car-microservice chart
-helm3 install car -n micro --create-namespace --dependency-update car-microservice 
+helm3 install car -n micro --create-namespace --dependency-update microservices/car 
 
 # Install flight-microservice chart
-helm3 install flight -n micro --create-namespace --dependency-update flight-microservice 
+helm3 install flight -n micro --create-namespace --dependency-update microservices/flight 
 
 # Install hotel-microservice chart
-helm3 install hotel -n micro --create-namespace --dependency-update hotel-microservice 
+helm3 install hotel -n micro --create-namespace --dependency-update microservices/hotel 
 
 # Install booking-microservice chart
-helm3 install booking -n micro --create-namespace --dependency-update booking-microservice 
+helm3 install booking -n micro --create-namespace --dependency-update microservices/booking 
 ```
 
 ## Verify installation

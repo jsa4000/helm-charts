@@ -1,0 +1,3 @@
+kube-prometheus-stack:
+  prometheus-node-exporter:
+    hostRootFsMount: false

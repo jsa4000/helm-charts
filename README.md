@@ -1,4 +1,4 @@
-# Kubernetes Helm Charts
+# Kubernetes Helm Charts Deplloyment
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -16,17 +16,6 @@ helm repo add jsa4000 https://jsa4000.github.io/helm-charts
 ```
 
 You can then run `helm search repo jsa4000` to see the charts.
-
-## Build
-
-```console
-## Package current Helm Chart version
-helm3 package charts/microservice-chart-java
-helm3 package charts/microservice-library-chart-java
-
-## Recreate the Helm repository Index
-helm3 repo index
-```
 
 ## License
 

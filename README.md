@@ -22,7 +22,7 @@ You can then run `helm search repo jsa4000` to see the charts.
 ```console
 ## Package current Helm Chart version
 helm3 package charts/microservice-chart-java
-helm3 package helm3 package charts/microservice-library-chart-java
+helm3 package charts/microservice-library-chart-java
 
 ## Recreate the Helm repository Index
 helm3 repo index

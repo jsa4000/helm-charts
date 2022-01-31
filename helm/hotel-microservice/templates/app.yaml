@@ -1,0 +1,18 @@
+{{ include "microservice-chart.configmap" . }}
+---
+{{ include "microservice-chart.deployment" . }}
+---
+{{ include "microservice-chart.destination-rule-orig-tls" . }}
+---
+{{ include "microservice-chart.ingress" . }}
+---
+{{ include "microservice-chart.secrets" . }}
+---
+{{ include "microservice-chart.service-entry" . }}
+---
+{{ include "microservice-chart.service-monitor" . }}
+---
+{{ include "microservice-chart.service" . }}
+---
+{{ include "microservice-chart.traefik" . }}
+---

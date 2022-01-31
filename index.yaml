@@ -1,0 +1,50 @@
+apiVersion: v1
+entries:
+  microservice-chart-java:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-01-31T13:19:46.88895+01:00"
+    dependencies:
+    - name: microservice-library-chart-java
+      repository: https://jsa4000.github.io/helm-charts
+      version: 1.0.0
+    description: A Helm chart for Java Microservices
+    digest: 5a3a162c92d67f6dcf0dfe7896d9fc97037426162db4d7b593f2fa332a369505
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - microservice
+    - java
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: microservice-chart-java
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: application
+    urls:
+    - microservice-chart-java-1.0.0.tgz
+    version: 1.0.0
+  microservice-library-chart-java:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-01-31T13:19:46.89037+01:00"
+    description: A library Helm chart for Java Microservices
+    digest: 1030831def138655a9699739d1a52563f191b9c614986e1016cc8cb60be5801c
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - microservice
+    - library
+    - java
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: microservice-library-chart-java
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: library
+    urls:
+    - microservice-library-chart-java-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-01-31T13:19:46.885649+01:00"

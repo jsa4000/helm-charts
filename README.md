@@ -17,6 +17,17 @@ helm repo add jsa4000 https://jsa4000.github.io/helm-charts
 
 You can then run `helm search repo jsa4000` to see the charts.
 
+## Build
+
+```console
+## Package current Helm Chart version
+helm3 package charts/microservice-chart-java
+helm3 package helm3 package charts/microservice-library-chart-java
+
+## Recreate the Helm repository Index
+helm3 repo index
+```
+
 ## License
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->

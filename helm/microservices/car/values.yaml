@@ -10,7 +10,7 @@ component: api           # [api|domian|data|controller]
 namespace: micro
 #serviceAccountName: booking-admins
 
-replicaCount: 3
+replicaCount: 1
 
 # IMAGE
 image:  

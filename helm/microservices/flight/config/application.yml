@@ -4,7 +4,7 @@ spring:
       on-profile: docker
   data:
     mongodb:
-      uri: mongodb://${SECRET_DATABASE_USERNAME}:${SECRET_DATABASE_PASSWORD}@mongo-mongodb.datastore.svc.cluster.local:27017/db_1
+      uri: mongodb://${SECRET_DATABASE_USERNAME}:${SECRET_DATABASE_PASSWORD}@mongodb.datastore.svc.cluster.local:27017/db_1
 
 server:
   port: 8080

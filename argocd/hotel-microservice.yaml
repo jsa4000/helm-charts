@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: hotel-microservice
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: booking-project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: micro
+  source:
+    path: helm/microservices/hotel
+    repoURL: https://github.com/jsa4000/helm-charts.git
+    targetRevision: deploy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

@@ -166,6 +166,45 @@ Deploy the first application to point to the others apps.
 kubectl apply -f project.yaml   
 ```
 
+### ApplicationSets
+
+Application set allow to define some rules to the deployments.
+There are some generators to use with Application Set
+
+**list**
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: booking
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: engineering-dev
+        url: https://1.2.3.4
+      - cluster: engineering-prod
+        url: https://2.4.6.8
+      - cluster: finance-preprod
+        url: https://9.8.7.6
+  template:
+    metadata:
+      name: 'booking-{{cluster}}'
+    spec:
+      project: booking-project
+      source:
+        path: argocd
+        repoURL: https://github.com/jsa4000/helm-charts.git
+        targetRevision: {{cluster}}
+      destination:
+        server: '{{url}}'
+        namespace: micro
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+```
 
 ## License
 

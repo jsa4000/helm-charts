@@ -26,7 +26,7 @@ helm3 install traefik -n tools --create-namespace --dependency-update tools/trae
 helm3 install prometheus-stack -n monitoring --create-namespace --dependency-update tools/prometheus-stack 
 
 # Install MongoDB chart into datastore namespace
-helm3 install mongodb -n datastore --create-namespace --dependency-update tools/mongodb
+helm3 install mongo -n datastore --create-namespace --dependency-update tools/mongodb
 ```
 k get
 Uninstall

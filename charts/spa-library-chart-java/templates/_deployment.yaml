@@ -81,8 +81,9 @@ spec:
               mountPath: /etc/nginx
             - name: secret-conf
               mountPath: /etc/nginx
-            - mountPath: /var/log/nginx
-              name: log
+            - name: log
+              mountPath: /var/log/nginx
+              
       volumes:
         - name: config-conf
           configMap:

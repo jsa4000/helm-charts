@@ -8,6 +8,8 @@
 ---
 {{ include "spa-chart.secrets" . }}
 ---
+{{ include "spa-chart.service-entry" . }}
+---
 {{ include "spa-chart.service" . }}
 ---
 {{ include "spa-chart.traefik" . }}

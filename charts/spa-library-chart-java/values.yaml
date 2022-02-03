@@ -86,3 +86,8 @@ traefik:
   enabled: false
   ## Specify a path
   #path: /path-redirect
+
+# SERVICE ENTRY 
+serviceEntry:
+  enabled: false
+  

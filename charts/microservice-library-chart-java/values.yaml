@@ -30,10 +30,12 @@ deployment:
     readinessProbe:
       path: /management/health
       initialDelaySeconds: 30
+      periodSeconds: 3
       timeoutSeconds: 2
     livenessProbe:
       path: /management/health
       initialDelaySeconds: 45
+      periodSeconds: 3
       timeoutSeconds: 2
     requests:
       memory: "256Mi"

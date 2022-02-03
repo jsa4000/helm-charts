@@ -1,0 +1,26 @@
+{{- define "spa-chart.service" -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "spa-chart.fullname" . }}-srv
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  labels:
+    app.kubernetes.io/name: {{ include "spa-chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}      
+    app.kubernetes.io/component: {{ .Values.component }}  
+    app.kubernetes.io/part-of: {{ .Values.sistema }}  
+    app.kubernetes.io/managed-by: {{ .Release.Service }}  
+    helm.sh/chart: {{ include "spa-chart.chart" . }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "spa-chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}      
+{{- end -}}

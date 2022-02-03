@@ -1,0 +1,112 @@
+{{- define "spa-chart.ingress" -}}
+{{- if .Values.ingress.private.enabled }}
+# Expone los pods para uso de los desarrolladores.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "spa-chart.fullname" . }}-ing
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  annotations:
+    app.kubernetes.io/name: {{ include "spa-chart.name" . }}  
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: {{ .Values.component }}  
+    app.kubernetes.io/part-of: {{ .Values.sistema }}  
+    helm.sh/chart: {{ include "spa-chart.chart" . }}
+    kubernetes.io/ingress.class: traefik
+    external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.private.dnstarget }} 
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host:  {{ .Values.ingress.private.host }}
+    http:
+      paths:
+      - path: {{ .Values.ingress.private.path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "spa-chart.fullname" . }}-srv
+            port:
+              number: {{ .Values.service.port }}
+{{- if .Values.ingress.public.enabled }}
+
+---
+{{ end -}}
+{{ end -}}
+{{- if .Values.ingress.public.enabled }}
+# Expone los pods en el service mesh
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "spa-chart.fullname" . }}-gateway
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  annotations:
+    app.kubernetes.io/name: {{ include "spa-chart.name" . }}-gateway
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: {{ .Values.component }}  
+    app.kubernetes.io/part-of: {{ .Values.sistema }}  
+    helm.sh/chart: {{ include "spa-chart.chart" . }}
+spec:
+  selector:
+    istio: ingressgateway 
+  servers:
+{{- $hostValue := toYaml .Values.ingress.public.hosts -}}  
+{{- range $value := .Values.ingress.public.ports }}
+  - hosts:
+    {{- ($hostValue) | nindent 4 }}
+    port:
+      number: {{ $value.number }}
+      name: {{ $value.name }}
+      protocol: {{ $value.protocol }}    
+{{- end }}
+
+--- 
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "spa-chart.fullname" . }}-vsrv
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  annotations:
+    app.kubernetes.io/name: {{ include "spa-chart.name" . }}-vsrv
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/component: {{ .Values.component }}  
+    app.kubernetes.io/part-of: {{ .Values.sistema }}  
+    helm.sh/chart: {{ include "spa-chart.chart" . }}
+spec:
+  hosts:
+  {{- with .Values.ingress.public.hosts }}          
+    {{- toYaml . | nindent 2 -}}
+  {{- end }}
+  gateways:
+  - {{ include "spa-chart.fullname" . }}-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /{{ include "spa-chart.name" . }}/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: {{ include "spa-chart.fullname" . }}-srv
+        port:
+          number: {{ .Values.service.port }}
+    #appendHeaders: 
+    #  X-Forwarded-Prefix: /{{ include "spa-chart.name" . }}/
+    retries:
+      attempts: {{ .Values.ingress.public.attempts }}
+      perTryTimeout: {{ .Values.ingress.public.perTryTimeout }}
+
+{{- end -}}
+{{- end -}}

@@ -1,0 +1,88 @@
+# Default values for java-chart-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# GLOBAL
+nameOverride: spa
+fullnameOverride: spa-angular
+sistema: angular
+component: frontend           # Values [api|domian|data|controller]
+namespace: spa
+serviceAccountName: spa-admin
+
+chart:
+  name: spa
+  version: 1.0.0
+
+replicaCount: 1
+
+# IMAGE
+image:
+  repository: cuc.registry.pe/releases
+  name: spa
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+
+# DEPLOYMENT
+deployment:
+  containers:
+    containerPort: 80    
+    readinessProbe:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 1
+    livenessProbe:
+      path: /
+      initialDelaySeconds: 10
+      periodSeconds: 5
+      timeoutSeconds: 1
+    requests:
+      cpu: 100m
+      memory: 90Mi
+    limits:
+      cpu: 100m
+      memory: 90Mi
+
+# SECRETS
+secrets:
+  enabled: false
+  create: false
+  name: spa
+
+# CONFIGMAP
+configMap:
+  enabled: true
+  create: false
+  name: spa-conf
+
+# SERVICE 
+service:
+  type: ClusterIP
+  port: 80
+
+# INGRESS
+ingress: 
+  public:
+    enabled: true
+    hosts:
+    - "*"
+    attempts: 3
+    perTryTimeout: 2s
+    ports:
+    - name: http
+      number: 80
+      protocol: HTTP
+    - name: https
+      number: 443
+      protocol: HTTP
+  private:
+    enabled: false    
+    ## Specify a path
+    #path: /path-redirect
+
+# TRAEFIK
+traefik:
+  enabled: false
+  ## Specify a path
+  #path: /path-redirect

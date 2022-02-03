@@ -1,0 +1,14 @@
+{{ include "spa-chart.configmap" . }}
+---
+{{ include "spa-chart.deployment" . }}
+---
+{{ include "spa-chart.destination-rule-orig-tls" . }}
+---
+{{ include "spa-chart.ingress" . }}
+---
+{{ include "spa-chart.secrets" . }}
+---
+{{ include "spa-chart.service" . }}
+---
+{{ include "spa-chart.traefik" . }}
+---

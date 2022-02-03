@@ -3,13 +3,13 @@ entries:
   microservice-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-01-31T13:19:46.88895+01:00"
+    created: "2022-02-03T11:10:47.260057+01:00"
     dependencies:
     - name: microservice-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
       version: 1.0.0
     description: A Helm chart for Java Microservices
-    digest: 5a3a162c92d67f6dcf0dfe7896d9fc97037426162db4d7b593f2fa332a369505
+    digest: 828f663676669b4abc0ebf1afedf1a2436aac05886446d6e805490ce35c11490
     home: https://github.com/jsa4000/helm-charts
     keywords:
     - microservice
@@ -28,9 +28,9 @@ entries:
   microservice-library-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-01-31T13:19:46.89037+01:00"
+    created: "2022-02-03T11:10:47.260953+01:00"
     description: A library Helm chart for Java Microservices
-    digest: 1030831def138655a9699739d1a52563f191b9c614986e1016cc8cb60be5801c
+    digest: 9766893851532b9ceef503b2cbe9716cffad8bdce012a7162bcbffdc80b58213
     home: https://github.com/jsa4000/helm-charts
     keywords:
     - microservice
@@ -47,4 +47,50 @@ entries:
     urls:
     - microservice-library-chart-java-1.0.0.tgz
     version: 1.0.0
-generated: "2022-01-31T13:19:46.885649+01:00"
+  spa-chart-java:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-03T11:10:47.2622+01:00"
+    dependencies:
+    - name: spa-library-chart-java
+      repository: https://jsa4000.github.io/helm-charts
+      version: 1.0.0
+    description: A Helm chart for SPA (Single Page Application) based on Ngnix
+    digest: 5b782c5d7ea11eae4ed0195047c9f51decba2305d2c8cc08e7e478b1737e0ead
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - spa
+    - nginx
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: spa-chart-java
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: application
+    urls:
+    - spa-chart-java-1.0.0.tgz
+    version: 1.0.0
+  spa-library-chart-java:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-03T11:10:47.263684+01:00"
+    description: A library Helm chart for SPA (Single Page Application) based on Ngnix
+    digest: 084a9a13c58446c018ceeb0a88f9d00b7092746b3543f489cc55e714da3bb163
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - spa
+    - nginx
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: spa-library-chart-java
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: library
+    urls:
+    - spa-library-chart-java-1.0.0.tgz
+    version: 1.0.0
+generated: "2022-02-03T11:10:47.258001+01:00"

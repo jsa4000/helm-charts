@@ -5,6 +5,7 @@
 ### Helm ###
 # Chart dependencies
 **/charts/*.tgz
+charts/
 
 ### macOS ###
 # General
@@ -13,7 +14,8 @@
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*

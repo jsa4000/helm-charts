@@ -53,7 +53,7 @@ secrets:
 # CONFIGMAP
 configMap:
   enabled: true
-  create: false
+  create: true
   name: spa-conf
 
 # SERVICE 

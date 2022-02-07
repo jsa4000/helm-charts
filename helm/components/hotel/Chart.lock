@@ -1,6 +1,0 @@
-dependencies:
-- name: microservice-library-chart-java
-  repository: https://jsa4000.github.io/helm-charts/
-  version: 1.0.0
-digest: sha256:cffcfb2fe2ec6c65febfc4c2b07f7022b4cdf1e38858550314a7dd25adcde555
-generated: "2022-01-31T21:34:19.364543+01:00"

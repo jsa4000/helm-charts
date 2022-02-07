@@ -65,6 +65,8 @@ secrets:
   enabled: true
   create: true
   name: hotel
+  sealedSecrets:
+    enabled: false
 
 # CONFIGMAP
 configMap:

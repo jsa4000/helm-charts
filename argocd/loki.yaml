@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: booking-project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+  source:
+    chart: loki-stack
+    helm:
+      values: |
+        grafana:
+          enabled: false
+    repoURL: https://grafana.github.io/helm-charts
+    targetRevision: 2.4.1
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

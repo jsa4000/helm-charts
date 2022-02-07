@@ -5,7 +5,7 @@
 ### Helm ###
 # Chart dependencies
 **/charts/*.tgz
-/charts/*/charts
+/charts/*
 *.tgz
 index.yaml
 

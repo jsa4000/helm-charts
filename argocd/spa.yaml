@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: booking-microservice
+  name: spa
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "10"
@@ -11,9 +11,9 @@ spec:
   project: booking-project
   destination:
     server: https://kubernetes.default.svc
-    namespace: micro
+    namespace: spa
   source:
-    path: helm/components/booking
+    path: helm/components/spa
     repoURL: https://github.com/jsa4000/helm-charts.git
     targetRevision: deploy
   syncPolicy:

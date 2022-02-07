@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: micro
   source:
-    path: helm/microservices/flight
+    path: helm/components/flight
     repoURL: https://github.com/jsa4000/helm-charts.git
     targetRevision: deploy
   syncPolicy:

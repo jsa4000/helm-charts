@@ -75,30 +75,30 @@ spec:
           {{- with .Values.deployment.containers.env }}          
             {{- toYaml . | nindent 10 }}
           {{- end }}
-
           volumeMounts:
-{{- if .Values.configMap.enabled }}
+          {{- if .Values.configMap.enabled }}
             - name: config-conf
               mountPath: /etc/nginx
-{{- end }}
-{{- if .Values.secrets.enabled }}
+              readOnly: true
+          {{- end }}
+          {{- if .Values.secrets.enabled }}
             - name: secret-conf
               mountPath: /etc/nginx/secrets
-{{- end }}
+              readOnly: true
+          {{- end }}
             - name: log
               mountPath: /var/log/nginx
-              
       volumes:
-{{- if .Values.configMap.enabled }}
+      {{- if .Values.configMap.enabled }}
         - name: config-conf
           configMap:
             name: {{ .Values.configMap.name }}-cm
-{{- end }}
-{{- if .Values.secrets.enabled }}
+      {{- end }}
+      {{- if .Values.secrets.enabled }}
         - name: secret-conf
           secret:
             secretName: {{ .Values.secrets.name }}-secret
-{{- end }}
+      {{- end }}
         - name: log
           emptyDir: {}
 {{- if .Values.serviceAccountName }}

@@ -10,10 +10,6 @@ component: frontend           # Values [api|domian|data|controller]
 namespace: spa
 serviceAccountName: spa-admin
 
-chart:
-  name: spa
-  version: 1.0.0
-
 replicaCount: 1
 
 # IMAGE
@@ -49,6 +45,8 @@ secrets:
   enabled: false
   create: false
   name: spa
+  sealedSecrets:
+    enabled: false
 
 # CONFIGMAP
 configMap:

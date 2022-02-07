@@ -74,21 +74,29 @@ spec:
           env:
           {{- with .Values.deployment.containers.env }}          
             {{- toYaml . | nindent 10 }}
-          {{- end -}}
-{{- if .Values.configMap.enabled }}
+          {{- end }}
           volumeMounts:
+          {{- if .Values.configMap.enabled }}
             - name: config-conf
               mountPath: /opt/app/config/
+              readOnly: true
+          {{- end }}
+          {{- if .Values.secrets.enabled }}
             - name: secret-conf
               mountPath: /opt/app/secrets/
+              readOnly: true
+          {{- end }}
       volumes:
+      {{- if .Values.configMap.enabled }}
         - name: config-conf
           configMap:
             name: {{ .Values.configMap.name }}-cm
+      {{- end }}
+      {{- if .Values.secrets.enabled }}
         - name: secret-conf
           secret:
             secretName: {{ .Values.secrets.name }}-secret
-{{- end }}
+      {{- end }}
 {{- if .Values.serviceAccountName }}
       serviceAccountName: {{ .Values.serviceAccountName }}
 {{- end }}

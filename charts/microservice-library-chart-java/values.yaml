@@ -10,10 +10,6 @@ component: api           # Values [api|domian|data|controller]
 namespace: micro
 serviceAccountName: java-admin
 
-chart:
-  name: microservice
-  version: 1.0.0
-
 replicaCount: 1
 
 # IMAGE
@@ -51,8 +47,10 @@ deployment:
 # SECRETS
 secrets:
   enabled: true
-  create: false
+  create: true
   name: microservice
+  sealedSecrets:
+    enabled: false
 
 # CONFIGMAP
 configMap:
@@ -68,7 +66,7 @@ service:
 # INGRESS
 ingress: 
   public:
-    enabled: true
+    enabled: false
     hosts:
     - "*"
     attempts: 3

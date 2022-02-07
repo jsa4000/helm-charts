@@ -1,6 +1,6 @@
 apiVersion: v2
 name: spa-chart-java
-version: 1.0.0
+version: 1.1.0
 appVersion: "1.0.0"
 kubeVersion: ">=1.16.0-0"
 description: A Helm chart for SPA (Single Page Application) based on Ngnix
@@ -17,5 +17,5 @@ keywords:
 
 dependencies:
 - name: spa-library-chart-java
-  version: 1.0.0
+  version: 1.1.0
   repository: https://jsa4000.github.io/helm-charts

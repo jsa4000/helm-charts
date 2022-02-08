@@ -5,7 +5,7 @@
 # Run using the certificate provided by Sealed Secret Controller installed into the cluster
 # ./seal-secrets.sh 
 # Run using the provided certificate by args
-# ./seal-secrets.sh apply 'sealed-secret-public.pem'
+# ./seal-secrets.sh apply 'sealed-secrets.crt'
 #
 
 # Set variables

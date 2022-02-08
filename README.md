@@ -1,6 +1,7 @@
 # ArgoCD
 
-Install ArgoCD using Helm Charts
+Install ArgoCD using Helm Charts. This is needed to deploy ArgoCD CRDs.
+After the installation ArgoCD will be managed by itself (lifecycle) since it is configured as custom Application in `argocd/argocd.yaml`
 
 ```bash
 # Add Helm Repo
@@ -12,7 +13,7 @@ helm3 repo update
 ## Install ArgoCD Helm Chart
 helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5
 
-## Install ArgoCD with custom values equal to the application (argocd/argocd.yaml)
+## [RECOMMENDED] Install ArgoCD with custom values equal to the application (argocd/argocd.yaml)
 helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 \
   --set redis-ha.enabled=false \
   --set controller.enableStatefulSet=false \
@@ -40,7 +41,7 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 
 ## Install ArgoCD Root Project
 
-> Be sure to install additional secrets such as Git Credentials, Certificates, etc..
+> Be sure to install additional secrets such as Git Credentials, SSH keys, Sealed Secrets Certificates, etc..
 
 ```bash
 ## Wait until argo-cd pods are running

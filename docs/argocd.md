@@ -52,7 +52,7 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/st
 ### Wait for the installation to complete
 
 ```bash
-# Wait until argccd finish to install and all pods are runnning
+# Wait until ArgoCD finish to install and all pods are running
 kubectl get pods -n argocd -w
 ```
 

@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: booking-project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  source:
+    chart: argo-cd
+    helm:
+      values: |
+        ## See HA Modes Documentation
+        # https://github.com/argoproj/argo-helm/tree/master/charts/argo-cd
+        redis-ha:
+          enabled: false
+        controller:
+          enableStatefulSet: false
+        server:
+          autoscaling:
+            enabled: false
+            minReplicas: 2
+        repoServer:
+          autoscaling:
+            enabled: false
+            minReplicas: 2
+    repoURL: https://argoproj.github.io/argo-helm
+    targetRevision: 3.33.5
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true

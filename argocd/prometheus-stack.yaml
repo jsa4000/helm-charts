@@ -18,6 +18,19 @@ spec:
       values: |
         prometheus-node-exporter:
           hostRootFsMount: false
+        grafana:
+          ingress:
+            enabled: true
+            annotations:
+              kubernetes.io/ingress.class: traefik
+              #traefik.ingress.kubernetes.io/rewrite-target: /
+              #traefik.frontend.rule.type: PathPrefixStrip
+            path: /grafana
+          grafana.ini:
+            server:
+              root_url: "%(protocol)s://%(domain)s:%(http_port)s/grafana/"
+              serve_from_sub_path: true
+          adminPassword: prom-operator
     repoURL: https://prometheus-community.github.io/helm-charts
     targetRevision: 18.0.6
   syncPolicy:

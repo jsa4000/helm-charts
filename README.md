@@ -33,14 +33,18 @@ helm3 package charts/microservice-chart-java
 helm3 package charts/microservice-library-chart-java
 helm3 package charts/spa-chart-java
 helm3 package charts/spa-library-chart-java
-
-## Recreate the Helm repository Index
-helm3 repo index .
 ```
 
 ## Publish
 
 Copy generated `.tgz` files and index into `gh-pages` branch with the helm repository.
+
+```bash
+## Recreate the Helm repository Index with new packages versions
+helm3 repo index .
+
+## Commit and Push to repository
+```
 
 ## License
 

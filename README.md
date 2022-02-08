@@ -1,15 +1,29 @@
 # ArgoCD
 
-Install ArgoCD via downloading the latest stable version
-
-The installation manifests include ClusterRoleBinding resources that reference argocd namespace. If you installing Argo CD into a different namespace then make sure to update the namespace reference.
+Install ArgoCD using Helm Charts
 
 ```bash
-# Create devops namespaace
-kubectl create namespace argocd
+# Add Helm Repo
+helm3 repo add argo https://argoproj.github.io/argo-helm
 
-# Install argocd 
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+# Update repo
+helm3 repo update
+
+## Install ArgoCD Helm Chart
+helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5
+
+## Install ArgoCD with custom values equal to the application (argocd/argocd.yaml)
+helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 \
+  --set redis-ha.enabled=false \
+  --set controller.enableStatefulSet=false \
+  --set server.autoscaling.enabled=false \
+  --set repoServer.autoscaling.enabled=false
+
+# Take a look different ways to deploy ArgoCD: 
+#  - Non HA-Mode
+#  - HA-Mode With Autoscaling
+#  - HA-Mode Without autoscaling
+#  - etc...
 ```
 
 ### Dashboard
@@ -22,6 +36,17 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 # Access ArgoCD as admin user
 kubectl port-forward svc/argocd-server -n argocd 8080:443
+```
+
+## Install ArgoCD Root Project
+
+> Be sure to install additional secrets such as Git Credentials, Certificates, etc..
+
+```bash
+## Wait until argo-cd pods are running
+
+## Apply root project
+Kubectl apply -f project.yaml
 ```
 
 ### Example

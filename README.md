@@ -49,7 +49,77 @@ kubectl port-forward svc/argocd-server -n argocd 8080:443
 Kubectl apply -f project.yaml
 ```
 
-### Example
+### Apps of Apps
+
+With Argo CD there is a way to automate this by creating an application that implements the app of apps pattern. We can call this the “root” application.
+
+```console
+├── argocd
+│   ├── booking-microservice.yaml
+│   ├── car-microservice.yaml
+│   ├── flight-microservice\ copy.yaml
+│   ├── hotel-microservice.yaml
+│   ├── mongodb.yaml
+│   └── prometheus-stack.yaml
+└── project.yaml
+```
+
+project.yaml
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: booking-project
+  namespace: argocd
+  # Finalizer that ensures that project is not deleted until it is not referenced by any application
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  # Project description
+  description: The app bundle POC project
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+  # Only permit applications to deploy to the guestbook namespace in the same cluster
+  destinations:
+  - namespace: '*'
+    server: '*'
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: booking
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: booking-project
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: micro
+  source:
+    path: argocd
+    repoURL: https://github.com/jsa4000/helm-charts.git
+    targetRevision: deploy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Deploy the first application to point to the others apps.
+
+```bash
+# Apply AppProject and Root Application
+kubectl apply -f project.yaml   
+```
+
+### Applications
 
 car-microservice.yaml
 
@@ -119,76 +189,6 @@ Apply application files to kubernetes cluster (the namespace is not need since i
 # Apply both argocd applicaation files
 kubectl apply -n argocd -f car-microservice.yaml
 kubectl apply -n argocd -f prometheus-stack.yaml
-```
-
-### Apps of Apps
-
-With Argo CD there is a way to automate this by creating an application that implements the app of apps pattern. We can call this the “root” application.
-
-```console
-├── argocd
-│   ├── booking-microservice.yaml
-│   ├── car-microservice.yaml
-│   ├── flight-microservice\ copy.yaml
-│   ├── hotel-microservice.yaml
-│   ├── mongodb.yaml
-│   └── prometheus-stack.yaml
-└── project.yaml
-```
-
-project.yaml
-
-```yaml
-apiVersion: argoproj.io/v1alpha1
-kind: AppProject
-metadata:
-  name: booking-project
-  namespace: argocd
-  # Finalizer that ensures that project is not deleted until it is not referenced by any application
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  # Project description
-  description: The app bundle POC project
-  # Allow manifests to deploy from any Git repos
-  sourceRepos:
-  - '*'
-  # Only permit applications to deploy to the guestbook namespace in the same cluster
-  destinations:
-  - namespace: '*'
-    server: '*'
-  # Deny all cluster-scoped resources from being created, except for Namespace
-  clusterResourceWhitelist:
-  - group: '*'
-    kind: '*'
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: booking
-  namespace: argocd
-  finalizers:
-  - resources-finalizer.argocd.argoproj.io
-spec:
-  project: booking-project
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: micro
-  source:
-    path: argocd
-    repoURL: https://github.com/jsa4000/helm-charts.git
-    targetRevision: deploy
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-```
-
-Deploy the first application to point to the others apps.
-
-```bash
-# Apply AppProject and Root Application
-kubectl apply -f project.yaml   
 ```
 
 ### ApplicationSets

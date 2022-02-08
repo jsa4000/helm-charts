@@ -10,6 +10,9 @@ kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 909
 
 ## Grafana dashboard (http://localhost:3000) (`admin/prom-operator`)
 kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+
+## Using Ingress 
+http://localhost/grafana
 ```
 
 Install following dashboards into Grafana.

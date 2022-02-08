@@ -36,7 +36,7 @@ spec:
   source:
     path: argocd
     repoURL: https://github.com/jsa4000/helm-charts.git
-    targetRevision: deploy
+    targetRevision: deploy-sealed
   syncPolicy:
     automated:
       prune: true

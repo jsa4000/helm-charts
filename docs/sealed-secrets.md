@@ -62,10 +62,10 @@ https://github.com/bitnami-labs/sealed-secrets/blob/main/docs/bring-your-own-cer
 
 ```bash
 ##Set your vars
-export PRIVATEKEY="mytls.key"
-export PUBLICKEY="mytls.crt"
+export PRIVATEKEY="sealed-secrets.key"
+export PUBLICKEY="sealed-secrets.crt"
 export NAMESPACE="sealed-secrets"
-export SECRETNAME="mycustomkeys"
+export SECRETNAME="sealed-secrets-keys"
 ```
 
 Generate a new RSA key pair (certificates)
@@ -78,8 +78,12 @@ openssl req -x509 -nodes -newkey rsa:4096 -keyout "$PRIVATEKEY" -out "$PUBLICKEY
 Create a tls k8s secret, using your recently created RSA key pair
 
 ```bash
+# Create namespace if not exists
+kubectl create namespace "$NAMESPACE"
+
 # Create a secret with the public and private keys
 kubectl -n "$NAMESPACE" create secret tls "$SECRETNAME" --cert="$PUBLICKEY" --key="$PRIVATEKEY"
+
 # Add a custom label to notificy the controller the current active secret to use
 kubectl -n "$NAMESPACE" label secret "$SECRETNAME" sealedsecrets.bitnami.com/sealed-secrets-key=active
 ```
@@ -122,10 +126,10 @@ Use following commands
 
 ```bash
 # Check all the files to be encrypted
-./seal-secrets.sh
+./seal-secrets.sh plan './certs/sealed-secrets.crt'
 
 # Apply the kubeseal encryption with the public key provided
-./seal-secrets.sh apply 'sealed-secret-public.pem'
+./seal-secrets.sh apply './certs/sealed-secrets.crt'
 ```
 
 ## Usage
@@ -136,7 +140,7 @@ Use following commands
 kubeseal \
     --controller-name=sealed-secrets \
     --controller-namespace=sealed-secrets\
-    --fetch-cert > sealed-secret-public.pem
+    --fetch-cert > sealed-secrets.crt
 ```
 
 ### Create a normal secret using the conten of the file
@@ -156,7 +160,7 @@ kubectl create secret generic mysecret --dry-run=client --from-file=mysecret.uns
 kubectl create secret generic mysecret --dry-run=client --from-file=mysecret=mysecret.unseal -o yaml > mysecret.yaml
 
 # Creaete the sealed-secret cluster-wide to be used with templating (helm chaart)
-kubeseal --cert sealed-secret-public.pem --scope cluster-wide -o yaml < mysecret.yaml > mysecret-sealed.yaml
+kubeseal --cert sealed-secrets.crt --scope cluster-wide -o yaml < mysecret.yaml > mysecret-sealed.yaml
 ```
 
 ### Apply the sealed secret and verify it is created in every namespace
@@ -210,12 +214,12 @@ spec:
 
 ```bash
 # Create a raw encrypt from a text file
-kubeseal --cert sealed-secret-public.pem --raw --scope cluster-wide --from-file=mysecret.unseal
+kubeseal --cert sealed-secrets.crt --raw --scope cluster-wide --from-file=mysecret.unseal
 
 # Create the env variables to use with the template
 export SECRERT_SEALED_NAME=mysecret-sealed
 export MYSECRERT_KEY=mysecret
-export MYSECRERT_SEALED=$(Kubeseal --cert sealed-secret-public.pem --raw --scope cluster-wide --from-file=mysecret.unseal)
+export MYSECRERT_SEALED=$(Kubeseal --cert sealed-secrets.crt --raw --scope cluster-wide --from-file=mysecret.unseal)
 
 # Create a file using the variales and the template
 envsubst < secret-sealed-template.yaml > mysecret-sealed.yaml

@@ -66,7 +66,7 @@ secrets:
   create: true
   name: car
   sealedSecrets:
-    enabled: false
+    enabled: true
 
 # CONFIGMAP
 configMap:

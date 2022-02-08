@@ -67,13 +67,51 @@ argocd    argocd-server-cd68f46f8-7vpsv        1/1   Running     0     7m3s
 
 ## Create Gitlab Credentials
 
+Create following template or create using the cli to create the secret
+
+`gitlab-argocd-secret.yaml`
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gitlab-argocd-secret
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: ${GITLAB_URL}
+  username: ${GITLAB_TOKEN_NAME}
+  password: ${GITLAB_TOKEN}
+```
+
 ```bash
 ## Export Gitlab variables
+export GITLAB_URL=https://gitlab.com/MSAnsait/mauc/poc/gitops-argocd.git
 export GITLAB_TOKEN_NAME=gitops-argocd
 export GITLAB_TOKEN=******
 
+# Create argocd namespace if not installed previously
+kubectl create namespace argocd
+
+# Using the template provided
+
 ## Apply secret with previous information (brew install gettext)
 envsubst < gitlab-argocd-secret.yaml | kubectl apply -f -
+
+# Using the cli
+
+export NAMESPACE="argocd"
+export SECRETNAME="gitlab-argocd-secret"
+
+# Create a secret with the public and private keys
+kubectl -n "$NAMESPACE" create secret generic "$SECRETNAME" \
+  --from-literal=url="${GITLAB_URL}" \
+  --from-literal=username="${GITLAB_TOKEN_NAME}" \
+  --from-literal=password="${GITLAB_TOKEN}"
+
+# Add a custom label to notificy the controller the current active secret to use
+kubectl -n "$NAMESPACE" label secret "$SECRETNAME" argocd.argoproj.io/secret-type=repository
 ```
 
 ```bash

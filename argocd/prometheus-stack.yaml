@@ -23,8 +23,6 @@ spec:
             enabled: true
             annotations:
               kubernetes.io/ingress.class: traefik
-              #traefik.ingress.kubernetes.io/rewrite-target: /
-              #traefik.frontend.rule.type: PathPrefixStrip
             path: /grafana
           grafana.ini:
             server:

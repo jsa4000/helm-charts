@@ -16,6 +16,17 @@ helm repo add jsa4000 https://jsa4000.github.io/helm-charts
 
 You can then run `helm search repo jsa4000` to see the charts.
 
+## Indexing
+
+Copy generated `.tgz` files and index into `gh-pages` branch with the helm repository.
+
+```bash
+## Recreate the Helm repository Index with new packages versions
+helm3 repo index .
+
+## Commit and Push to repository
+```
+
 ## License
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->

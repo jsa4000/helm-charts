@@ -1,18 +1,24 @@
-{{ include "microservice-chart.configmap" . }}
+{{ include "application-library.configmap" . }}
 ---
-{{ include "microservice-chart.deployment" . }}
+{{ include "application-library.deployment" . }}
 ---
-{{ include "microservice-chart.destination-rule-orig-tls" . }}
+{{ include "application-library.hpa" . }}
 ---
-{{ include "microservice-chart.ingress" . }}
+{{ include "application-library.ingress" . }}
 ---
-{{ include "microservice-chart.secrets" . }}
+{{ include "application-library.secrets" . }}
 ---
-{{ include "microservice-chart.service-entry" . }}
+{{ include "application-library.service-entry" . }}
 ---
-{{ include "microservice-chart.service-monitor" . }}
+{{ include "application-library.service-monitor" . }}
 ---
-{{ include "microservice-chart.service" . }}
+{{ include "application-library.service" . }}
 ---
-{{ include "microservice-chart.traefik" . }}
+{{ include "application-library.rbac" . }}
+---
+{{ include "application-library.traefik" . }}
+---
+{{ include "application-library.pdb" . }}
+---
+{{ include "application-library.network-policy" . }}
 ---

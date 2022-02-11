@@ -27,7 +27,51 @@ helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 
 #  - etc...
 ```
 
-### Dashboard
+## Secrets
+
+### Gitlab
+
+```bash
+## Export Gitlab variables
+export NAMESPACE="argocd"
+export SECRETNAME="gitlab-argocd-secret"
+export GITLAB_URL=https://gitlab.com/jsa4000/gitops-argocd.git
+export GITLAB_TOKEN_NAME=gitops-argocd
+export GITLAB_TOKEN=******
+
+# Create argocd namespace if not installed previously
+kubectl create namespace argocd
+
+# Create a secret with the public and private keys
+kubectl -n "$NAMESPACE" create secret generic "$SECRETNAME" \
+  --from-literal=url="${GITLAB_URL}" \
+  --from-literal=username="${GITLAB_TOKEN_NAME}" \
+  --from-literal=password="${GITLAB_TOKEN}"
+
+# Add a custom label to notificy the controller the current active secret to use
+kubectl -n "$NAMESPACE" label secret "$SECRETNAME" argocd.argoproj.io/secret-type=repository
+```
+
+## Sealed Secret Certificates
+
+```bash
+##Set your vars
+export NAMESPACE="sealed-secrets"
+export SECRETNAME="sealed-secrets-keys"
+export PRIVATEKEY="sealed-secrets.key"
+export PUBLICKEY="sealed-secrets.crt"
+
+# Create namespace if not exists
+kubectl create namespace "$NAMESPACE"
+
+# Create a secret with the public and private keys
+kubectl -n "$NAMESPACE" create secret tls "$SECRETNAME" --cert="$PUBLICKEY" --key="$PRIVATEKEY"
+
+# Add a custom label to notificy the controller the current active secret to use
+kubectl -n "$NAMESPACE" label secret "$SECRETNAME" sealedsecrets.bitnami.com/sealed-secrets-key=active
+```
+
+## Dashboard
 
 ArgoCD provides a dashbosrd to visualize the deployments and applications.
 

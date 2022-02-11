@@ -1,16 +1,13 @@
-# Default values for microservice-chart-helm.
+# Default values for application-library-helm.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 # GLOBAL
 nameOverride: hotel
-fullnameOverride: hotel-microservice
+fullnameOverride: microservice-hotel
 sistema: booking
 component: api           # [api|domian|data|controller]
-namespace: micro
-#serviceAccountName: booking-admins
-
-replicaCount: 1
+namespaceOverride: micro
 
 # IMAGE
 image:  
@@ -18,53 +15,74 @@ image:
   name: hotel-microservice
   tag: 0.0.1-SNAPSHOT
   pullPolicy: Always #IfNotPresent
+  # pullSecrets: {}
 
-# DEPLOYMENT
-deployment:
-  containers:
-    containerPort: 8080    
-    readinessProbe:
-      path: /management/health/readiness
-      initialDelaySeconds: 60
-      timeoutSeconds: 2
-    livenessProbe:
-      path: /management/health/liveness
-      initialDelaySeconds: 80
-      timeoutSeconds: 2
-    requests:
-      memory: "256Mi"
-      cpu: "50m"
-    limits:
-      memory: "512Mi"
-      cpu: "1000m"
-    env:
-    - name: SPRING_PROFILES_ACTIVE
-      value: docker,jsonlog
-    - name: JAVA_OPTS
-      value: -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80  
-    - name: SPRING_CONFIG_ADDITIONAL_LOCATION
-      value: file:/opt/app/config/application.yml
-    - name: SECRET_JWT_PUBLIC_KEY
-      valueFrom:
-        secretKeyRef:
-          name: hotel-secret
-          key: jwt.publicKey
-    - name: SECRET_DATABASE_PASSWORD
-      valueFrom:
-        secretKeyRef:
-          name: hotel-secret
-          key: database.password
-    - name: SECRET_DATABASE_USERNAME
-      valueFrom:
-        secretKeyRef:
-          name: hotel-secret
-          key: database.username
+replicaCount: 1
+
+# CONTAINER PORT
+containerPort: 8080    
+
+# STRATEGY UPDATE
+strategy:
+  type: RollingUpdate
+  #rollingUpdate:
+  #  maxUnavailable: 25%
+  #  maxSurge: 1
+
+# HEALTH CHECKS
+readinessProbe:
+  httpGet:
+    path: /management/health/readiness
+    port: http
+  initialDelaySeconds: 60
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+livenessProbe:
+  httpGet:
+    path: /management/health/liveness
+    port: http
+  initialDelaySeconds: 80
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+# RESOURCES
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+
+# ENVIRONMENT VARIABLES
+env:
+- name: SPRING_PROFILES_ACTIVE
+  value: docker,jsonlog
+- name: JAVA_OPTS
+  value: -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80  
+- name: SPRING_CONFIG_ADDITIONAL_LOCATION
+  value: file:/opt/app/config/application.yml
+- name: SECRET_JWT_PUBLIC_KEY
+  valueFrom:
+    secretKeyRef:
+      name: microservice-hotel
+      key: jwt.publicKey
+- name: SECRET_DATABASE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: microservice-hotel
+      key: database.password
+- name: SECRET_DATABASE_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: microservice-hotel
+      key: database.username
 
 # SECRETS
 secrets:
   enabled: true
   create: true
-  name: hotel
   sealedSecrets:
     enabled: false
 
@@ -72,7 +90,6 @@ secrets:
 configMap:
   enabled: true
   create: true
-  name: hotel-conf
 
 # SERVICE
 service:
@@ -93,9 +110,6 @@ ingress:
         protocol: HTTP
   private:
     enabled: false
-    host: example.com
-    path: /hotel
-    dnstarget: traefik-dev.example.com
 
 # TRAEFIK
 traefik:
@@ -114,3 +128,25 @@ serviceMonitor:
 # SERVICE ENTRY
 serviceEntry:
   enabled: false
+
+# RBAC
+rbac:
+  enabled: true
+  create: true
+
+# NETWORK POLICY
+networkPolicy:
+  enabled: false
+
+## HPA
+autoscaling:
+ enabled: false
+# minReplicas: 1
+# maxReplicas: 3
+# metrics:
+#  - type: Resource
+#    resource:
+#      name: cpu
+#      target:
+#        type: Utilization
+#        averageUtilization: 75

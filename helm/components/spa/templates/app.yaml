@@ -1,16 +1,24 @@
-{{ include "spa-chart.configmap" . }}
+{{ include "application-library.configmap" . }}
 ---
-{{ include "spa-chart.deployment" . }}
+{{ include "application-library.deployment" . }}
 ---
-{{ include "spa-chart.destination-rule-orig-tls" . }}
+{{ include "application-library.hpa" . }}
 ---
-{{ include "spa-chart.ingress" . }}
+{{ include "application-library.ingress" . }}
 ---
-{{ include "spa-chart.secrets" . }}
+{{ include "application-library.secrets" . }}
 ---
-{{ include "spa-chart.service-entry" . }}
+{{ include "application-library.service-entry" . }}
 ---
-{{ include "spa-chart.service" . }}
+{{ include "application-library.service-monitor" . }}
 ---
-{{ include "spa-chart.traefik" . }}
+{{ include "application-library.service" . }}
+---
+{{ include "application-library.rbac" . }}
+---
+{{ include "application-library.traefik" . }}
+---
+{{ include "application-library.pdb" . }}
+---
+{{ include "application-library.network-policy" . }}
 ---

@@ -1,9 +1,56 @@
 apiVersion: v1
 entries:
+  application:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-11T12:56:10.232842+01:00"
+    dependencies:
+    - name: application-library
+      repository: https://jsa4000.github.io/helm-charts
+      version: 1.0.0
+    description: A Helm chart for Applications
+    digest: 414c619cf67907b80b3ed5123408c4a593bdc79c22b8c972c8114975e343216d
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - application
+    - kubernetes
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: application
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: application
+    urls:
+    - application-1.0.0.tgz
+    version: 1.0.0
+  application-library:
+  - apiVersion: v2
+    appVersion: 1.0.0
+    created: "2022-02-11T12:56:10.233926+01:00"
+    description: A Helm chart library for Applications
+    digest: 71f5e5f07d7b78f97324a1d0ef7707cbd8f0fe542b77e4b5390b7b0ab260532c
+    home: https://github.com/jsa4000/helm-charts
+    keywords:
+    - microservice
+    - application
+    - library
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: jsa4000@gmail.com
+      name: jsa4000
+    name: application-library
+    sources:
+    - https://github.com/jsa4000/helm-charts
+    type: library
+    urls:
+    - application-library-1.0.0.tgz
+    version: 1.0.0
   microservice-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.098028+01:00"
+    created: "2022-02-11T12:56:10.238384+01:00"
     dependencies:
     - name: microservice-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -27,7 +74,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.096719+01:00"
+    created: "2022-02-11T12:56:10.23679+01:00"
     dependencies:
     - name: microservice-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -52,7 +99,7 @@ entries:
   microservice-library-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.099622+01:00"
+    created: "2022-02-11T12:56:10.242134+01:00"
     description: A library Helm chart for Java Microservices
     digest: 4ed523ca39cde9b1a7c3e112e3fad251cc3a239e3e813c8e248ab46a6955dc10
     home: https://github.com/jsa4000/helm-charts
@@ -73,7 +120,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.098816+01:00"
+    created: "2022-02-11T12:56:10.239411+01:00"
     description: A library Helm chart for Java Microservices
     digest: 07167eac7b8276d94cda2d567e9652c2597de54b04fb7cbb6e76c78b054276c4
     home: https://github.com/jsa4000/helm-charts
@@ -95,7 +142,7 @@ entries:
   spa-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.102125+01:00"
+    created: "2022-02-11T12:56:10.244816+01:00"
     dependencies:
     - name: spa-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -119,7 +166,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.100866+01:00"
+    created: "2022-02-11T12:56:10.243499+01:00"
     dependencies:
     - name: spa-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -144,7 +191,7 @@ entries:
   spa-library-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.10433+01:00"
+    created: "2022-02-11T12:56:10.246583+01:00"
     description: A library Helm chart for SPA (Single Page Application) based on Ngnix
     digest: 2353d43740d04e2471d83dbd988e525d8e07082a245a51bb390058be9dd4733f
     home: https://github.com/jsa4000/helm-charts
@@ -164,7 +211,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-08T16:38:59.103578+01:00"
+    created: "2022-02-11T12:56:10.245812+01:00"
     description: A library Helm chart for SPA (Single Page Application) based on Ngnix
     digest: 78c5a426d2c0bb5494a1fb366ca562a58948f406aefc1040deae10b087ec503a
     home: https://github.com/jsa4000/helm-charts
@@ -182,4 +229,4 @@ entries:
     urls:
     - spa-library-chart-java-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-08T16:38:59.095284+01:00"
+generated: "2022-02-11T12:56:10.22855+01:00"

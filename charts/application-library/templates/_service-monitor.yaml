@@ -1,0 +1,27 @@
+{{- define "application-library.service-monitor" }}
+{{- if .Values.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name:  {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+    # Prometheus operator will look for this label to match up with the prometheus instance to configure
+    release: {{ .Values.serviceMonitor.release }}
+spec:
+  jobLabel: {{ include "application-library.fullname" . }}
+  endpoints:
+{{- range $endpoint := .Values.serviceMonitor.endpoints }}
+  - interval: {{ $endpoint.interval }}
+    port: {{ $endpoint.port }}
+    path: {{ $endpoint.path }}
+{{- end }} 
+  namespaceSelector:
+    matchNames:
+    - {{ include "application-library.namespace" . }}
+  selector:
+    matchLabels:
+      {{- include "application-library.selectorLabels" . | nindent 6 }}
+ {{- end }}
+ {{- end }}

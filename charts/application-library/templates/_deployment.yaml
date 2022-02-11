@@ -1,0 +1,80 @@
+{{- define "application-library.deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+{{- with .Values.strategy }}
+  strategy:
+{{ toYaml . | trim | indent 4 }}
+{{- end }} 
+  selector:
+    matchLabels:
+      {{- include "application-library.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "application-library.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/version: {{ .Values.image.tag }}
+      annotations:
+        {{- if not .Values.serviceMonitor.enabled }}
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '{{ .Values.containerPort }}'
+        prometheus.io/path: '/management/metrics'
+        {{- end }}
+    spec:
+      {{- if .Values.image.pullSecrets }}
+      imagePullSecrets:
+      {{- range .Values.image.pullSecrets }}
+        - name: {{ . }}
+      {{- end}}
+      {{- end }}
+      containers:
+        - name: {{ include "application-library.name" . }}
+          image: {{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: [{{- range .Values.args }}{{ printf "%s" . | quote }}, {{- end }}]
+          ports:
+            - name: http
+              containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 12 }}
+          readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 12 }}  
+          resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+          env:
+          {{- with .Values.env }}          
+            {{- toYaml . | nindent 10 }}
+          {{- end }}
+          volumeMounts:
+          {{- if .Values.configMap.enabled }}
+            - name: config-conf
+              mountPath: {{ default "/opt/app/config/" .Values.configMap.mountPath }}
+              readOnly: true
+          {{- end }}
+          {{- if .Values.secrets.enabled }}
+            - name: secret-conf
+              mountPath: {{ default "/opt/app/secrets/" .Values.secrets.mountPath }}
+              readOnly: true
+          {{- end }}
+      volumes:
+      {{- if .Values.configMap.enabled }}
+        - name: config-conf
+          configMap:
+            name: {{ default (include "application-library.fullname" .) .Values.configMap.useExistingConfigMap }}
+      {{- end }}
+      {{- if .Values.secrets.enabled }}
+        - name: secret-conf
+          secret:
+            secretName: {{ default (include "application-library.fullname" .) .Values.secrets.useExistingSecret }}
+      {{- end }}
+{{- if .Values.rbac.enabled }}
+      serviceAccountName: {{ default (include "application-library.fullname" .) .Values.rbac.useExistingServiceAccount }}
+{{- end }}
+{{- end }}

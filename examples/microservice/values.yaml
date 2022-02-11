@@ -1,0 +1,152 @@
+# Default values for application-library-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# GLOBAL
+nameOverride: notifications
+fullnameOverride: microservice-notifications
+sistema: notifications
+component: api           # [api|domian|data|controller]
+namespaceOverride: micro
+
+# IMAGE
+image:  
+  repository: jsantosa
+  name: microservice-notifications
+  tag: 0.0.1-SNAPSHOT
+  pullPolicy: Always #IfNotPresent
+  # pullSecrets: {}
+
+replicaCount: 1
+
+# CONTAINER PORT
+containerPort: 8080    
+
+# STRATEGY UPDATE
+strategy:
+  type: RollingUpdate
+  #rollingUpdate:
+  #  maxUnavailable: 25%
+  #  maxSurge: 1
+
+# HEALTH CHECKS
+readinessProbe:
+  httpGet:
+    path: /management/health/readiness
+    port: http
+  initialDelaySeconds: 60
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+livenessProbe:
+  httpGet:
+    path: /management/health/liveness
+    port: http
+  initialDelaySeconds: 80
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+# RESOURCES
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+
+# ENVIRONMENT VARIABLES
+env:
+- name: SPRING_PROFILES_ACTIVE
+  value: local,jsonlog
+- name: JAVA_OPTS
+  value: -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80  
+- name: SPRING_CONFIG_ADDITIONAL_LOCATION
+  value: file:/opt/app/config/application.yml
+- name: SECRET_JWT_PUBLIC_KEY
+  valueFrom:
+    secretKeyRef:
+      name: microservice-notifications
+      key: jwt.publicKey
+- name: SECRET_DATABASE_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: microservice-notifications
+      key: database.password
+- name: SECRET_DATABASE_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: microservice-notifications
+      key: database.username
+
+# SECRETS
+secrets:
+  enabled: true
+  create: true
+  sealedSecrets:
+    enabled: false
+
+# CONFIGMAP
+configMap:
+  enabled: true
+  create: true
+
+# SERVICE
+service:
+  type: ClusterIP
+  port: 80
+
+# INGRESS
+ingress: 
+  public:
+    enabled: false
+    hosts:
+      - "*"
+    attempts: 3
+    perTryTimeout: 2s
+    ports:
+      - name: http
+        number: 80
+        protocol: HTTP
+  private:
+    enabled: false
+
+# TRAEFIK
+traefik:
+  enabled: true
+  path: /notifications
+
+# SERVICE MONITOR 
+serviceMonitor:
+  enabled: true
+  release: prometheus
+  endpoints:
+  - interval: 30s
+    port: http
+    path: management/metrics
+
+# SERVICE ENTRY
+serviceEntry:
+  enabled: false
+
+# RBAC
+rbac:
+  enabled: true
+  create: true
+
+# NETWORK POLICY
+networkPolicy:
+  enabled: false
+
+## HPA
+autoscaling:
+ enabled: false
+# minReplicas: 1
+# maxReplicas: 3
+# metrics:
+#  - type: Resource
+#    resource:
+#      name: cpu
+#      target:
+#        type: Utilization
+#        averageUtilization: 75

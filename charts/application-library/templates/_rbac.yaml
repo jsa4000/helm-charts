@@ -1,0 +1,50 @@
+{{- define "application-library.rbac" }}
+{{- if and .Values.rbac.enabled }}
+{{- if and .Values.rbac.create (not .Values.rbac.useExistingServiceAccount) }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ template "application-library.fullname" . }}
+  namespace: {{ template "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+{{- end }}
+---
+{{- if and .Values.rbac.create (not .Values.rbac.useExistingRole) }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ template "application-library.fullname" . }}
+  namespace: {{ template "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+rules:
+- apiGroups: [""] # "" indicates the core API group
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list"]
+{{- with .Values.rbac.extraRoleRules }}
+{{ toYaml . | indent 0 }}
+{{- end}}
+{{- end }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ template "application-library.fullname" . }}
+  namespace: {{ template "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+{{- if (not .Values.rbac.useExistingRole) }}
+  name: {{ template "application-library.fullname" . }}
+{{- else }}
+  name: {{ .Values.rbac.useExistingRole }}
+{{- end }}
+subjects:
+- kind: ServiceAccount
+  name: {{ default (include "application-library.fullname" .) .Values.rbac.useExistingServiceAccount }}
+  namespace: {{ template "application-library.namespace" . }}
+{{- end }}
+{{- end }}

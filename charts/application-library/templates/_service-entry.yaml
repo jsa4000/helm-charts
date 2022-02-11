@@ -1,0 +1,53 @@
+{{- define "application-library.service-entry" }}
+{{- if .Values.serviceEntry.enabled }}
+{{- range $service := .Values.serviceEntry.services }}
+# Service entry for {{ $service.name }}
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:  
+  name:  {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  hosts:
+{{- with $service.hosts }}          
+    {{- toYaml . | nindent 2 -}}
+{{ end -}}    
+  ports:
+{{- with $service.ports }}          
+    {{- toYaml . | nindent 2 -}}
+{{ end -}}
+  resolution: {{ $service.resolution }}
+  location: {{ $service.location }}
+---
+{{- if $service.originateTls }}
+{{- if $service.originateTls.enabled}}
+{{- range $host := $service.hosts }}
+# Destination Rule {{ $service.name }}
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:  
+  name: {{ $service.name }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  host: {{ . }}
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN
+    portLevelSettings:
+{{- range $port := $service.ports }}
+    - port:
+        number: {{ $port.number }}
+      tls:
+        mode: {{ $service.originateTls.mode }}
+{{- end }} 
+---
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

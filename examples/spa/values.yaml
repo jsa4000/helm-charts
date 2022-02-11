@@ -1,0 +1,127 @@
+# Default values for application-library-helm.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# GLOBAL
+nameOverride: spa
+fullnameOverride: spa-angular
+sistema: spa
+component: frontend           # [api|domian|data|controller]
+namespaceOverride: spa
+
+# IMAGE
+image:  
+  repository: jsantosa
+  name: spa-example
+  tag: 1.0.0
+  pullPolicy: Always #IfNotPresent
+  # pullSecrets: {}
+
+replicaCount: 1
+
+# CONTAINER PORT
+containerPort: 80    
+
+# STRATEGY UPDATE
+strategy:
+  type: RollingUpdate
+  #rollingUpdate:
+  #  maxUnavailable: 25%
+  #  maxSurge: 1
+
+# HEALTH CHECKS
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+# RESOURCES
+resources:
+  requests:
+    cpu: 100m
+    memory: 90Mi
+  limits:
+    cpu: 100m
+    memory: 90Mi
+
+# ENVIRONMENT VARIABLES
+env: []
+
+# SECRETS
+secrets:
+  enabled: false
+  create: false
+  sealedSecrets:
+    enabled: false
+
+# CONFIGMAP
+configMap:
+  enabled: true
+  create: true
+  mountPath: /etc/nginx
+
+# SERVICE
+service:
+  type: ClusterIP
+  port: 80
+
+# INGRESS
+ingress: 
+  public:
+    enabled: false
+    hosts:
+      - "*"
+    attempts: 3
+    perTryTimeout: 2s
+    ports:
+      - name: http
+        number: 80
+        protocol: HTTP
+  private:
+    enabled: false
+
+# TRAEFIK
+traefik:
+  enabled: true
+  path: /
+
+# SERVICE MONITOR 
+serviceMonitor:
+  enabled: false
+
+# SERVICE ENTRY
+serviceEntry:
+  enabled: false
+
+# RBAC
+rbac:
+  enabled: true
+  create: true
+
+# NETWORK POLICY
+networkPolicy:
+  enabled: false
+
+## HPA
+autoscaling:
+ enabled: false
+# minReplicas: 1
+# maxReplicas: 3
+# metrics:
+#  - type: Resource
+#    resource:
+#      name: cpu
+#      target:
+#        type: Utilization
+#        averageUtilization: 75

@@ -1,0 +1,22 @@
+{{- define "application-library.hpa" }}
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "application-library.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+{{ toYaml .Values.autoscaling.metrics | indent 4 }}
+  behavior:
+{{ toYaml .Values.autoscaling.behavior | indent 4 }}
+{{- end }}
+{{- end -}}

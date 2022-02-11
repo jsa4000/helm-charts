@@ -1,0 +1,36 @@
+{{- define "application-library.traefik" }}
+{{- if .Values.traefik.enabled -}}
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+  - match: PathPrefix(`{{ .Values.traefik.path }}`)
+    kind: Rule
+    services:
+    - name: {{ include "application-library.fullname" . }}
+      port: {{ .Values.service.port }}
+    middlewares:
+    - name: {{ include "application-library.fullname" . }}
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "application-library.fullname" . }}
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.traefik.path }}
+{{- end -}}
+{{- end -}}

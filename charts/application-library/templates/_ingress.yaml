@@ -1,0 +1,88 @@
+{{- define "application-library.ingress" }}
+{{- if .Values.ingress.private.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "application-library.fullname" . }}
+  namespace: {{ include "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    external-dns.alpha.kubernetes.io/target: {{ .Values.ingress.private.dnstarget }} 
+    traefik.ingress.kubernetes.io/rewrite-target: /
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+  - host: {{ .Values.ingress.private.host }}
+    http:
+      paths:
+      - path: {{ .Values.ingress.private.path }}
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ include "application-library.fullname" . }}
+            port:
+              number: {{ .Values.service.port }}
+{{- if .Values.ingress.public.enabled }}
+---
+{{ end -}}
+{{ end -}}
+{{- if .Values.ingress.public.enabled }}
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: {{ include "application-library.fullname" . }}
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  selector:
+    istio: ingressgateway 
+  servers:
+{{- $hostValue := toYaml .Values.ingress.public.hosts -}}  
+{{- range $value := .Values.ingress.public.ports }}
+  - hosts:
+    {{- ($hostValue) | nindent 4 }}
+    port:
+      number: {{ $value.number }}
+      name: {{ $value.name }}
+      protocol: {{ $value.protocol }}    
+{{- end }}
+--- 
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "application-library.fullname" . }}
+{{- if .Values.namespace }}
+  namespace: {{ .Values.namespace }}
+{{- end }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  hosts:
+  {{- with .Values.ingress.public.hosts }}          
+    {{- toYaml . | nindent 2 -}}
+  {{- end }}
+  gateways:
+  - {{ include "application-library.fullname" . }}
+  http:
+  - match:
+    - uri:
+        prefix: /{{ include "application-library.name" . }}/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: {{ include "application-library.fullname" . }}
+        port:
+          number: {{ .Values.service.port }}
+    #appendHeaders: 
+    #  X-Forwarded-Prefix: /{{ include "application-library.name" . }}/
+    retries:
+      attempts: {{ .Values.ingress.public.attempts }}
+      perTryTimeout: {{ .Values.ingress.public.perTryTimeout }}
+{{- end -}}
+{{- end -}}

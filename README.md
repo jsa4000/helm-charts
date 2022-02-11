@@ -25,14 +25,11 @@ You can then run `helm search repo jsa4000` to see the charts.
 
 ```bash
 ## Update Chart dependencies
-helm3 dependency update charts/microservice-chart-java
-helm3 dependency update charts/spa-chart-java
+helm3 dependency update charts/application
 
-## Package current Helm Chart version
-helm3 package charts/microservice-chart-java
-helm3 package charts/microservice-library-chart-java
-helm3 package charts/spa-chart-java
-helm3 package charts/spa-library-chart-java
+## Package current Helm Charts version
+helm3 package charts/application
+helm3 package charts/application-library
 ```
 
 ## Publish

@@ -1,0 +1,172 @@
+# Default values for application.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# GLOBAL
+nameOverride: microservice
+fullnameOverride: microservice-java
+sistema: java
+component: api           # Values [api|domian|data|controller]
+namespaceOverride: micro
+
+# LABELS
+extraLabels: {}
+
+# IMAGE
+image:
+  repository: cuc.registry.pe/java-releases
+  name: microservice
+  tag: 1.0.0
+  pullPolicy: IfNotPresent
+  # pullSecrets:
+  #   - myRegistrKeySecretName
+
+# REPLICA COUNT
+replicaCount: 1
+
+# CONTAINER PORT
+containerPort: 8080    
+
+# STRATEGY UPDATE
+strategy:
+  type: RollingUpdate
+  #rollingUpdate:
+  #  maxUnavailable: 25%
+  #  maxSurge: 1
+
+# HEALTH CHECKS
+readinessProbe:
+  httpGet:
+    path: /management/health
+    port: http
+  initialDelaySeconds: 30
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+livenessProbe:
+  httpGet:
+    path: /management/health
+    port: http
+  initialDelaySeconds: 45
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+# RESOURCES
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "200m"
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+
+# ARGUMENTS 
+# args: ["--spring.config.additional-location","file:/opt/app/config/application.yml"]
+args: []
+
+# ENVIRONMENT VARIABLES
+env:
+- name: JAVA_OPTS
+  value: -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80  
+
+# SECRETS
+secrets:
+  enabled: true
+  create: true
+  #useExistingSecret: microservice
+  #mountPath: /opt/app/secrets/
+  sealedSecrets:
+    enabled: false
+
+# CONFIGMAP
+configMap:
+  enabled: true
+  create: false
+  #useExistingConfigMap: microservice
+  #mountPath: /opt/app/config/
+
+# SERVICE 
+service:
+  type: ClusterIP
+  port: 80
+
+# INGRESS
+ingress: 
+  public:
+    enabled: false
+    hosts:
+    - "*"
+    attempts: 3
+    perTryTimeout: 2s
+    ports:
+    - name: http
+      number: 80
+      protocol: HTTP
+    - name: https
+      number: 443
+      protocol: HTTP
+  private:
+    enabled: false    
+    ## Specify a path
+    #path: /path-redirect
+
+# TRAEFIK
+traefik:
+  enabled: false
+  ## Specify a path
+  #path: /path-redirect
+
+# SERVICE MONITOR 
+serviceMonitor:
+  enabled: false
+  release: prometheus
+  endpoints:
+  - interval: 30s
+    port: http
+    path: management/metrics
+  
+# SERVICE ENTRY 
+serviceEntry:
+  enabled: false
+
+# RBAC
+rbac:
+  enabled: false
+  create: false
+  ## Use an existing ClusterRole/Role 
+  # useExistingRole: my-role
+  ## Use an existing Service Account
+  # useExistingServiceAccount: my-service-account
+  extraRoleRules: []
+  # - apiGroups: []
+  #   resources: []
+  #   verbs: []
+
+# POD DISRUPTION BUDGET
+podDisruptionBudget: {}
+#  minAvailable: 1
+#  maxUnavailable: 1
+
+# NETWORK POLICY
+networkPolicy:
+  enabled: false
+  allowExternal: true
+  explicitNamespacesSelector: {}
+  # matchLabels:
+  #   role: frontend
+  # matchExpressions:
+  #  - {key: role, operator: In, values: [frontend]}
+
+## HPA
+autoscaling:
+  enabled: false
+#  minReplicas: 1
+#  maxReplicas: 10
+#  metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 60
+#  behavior: {}

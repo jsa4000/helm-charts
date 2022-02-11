@@ -1,0 +1,32 @@
+{{- define "application-library.network-policy" }}
+{{- if .Values.networkPolicy.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ template "application-library.fullname" . }}
+  namespace: {{ template "application-library.namespace" . }}
+  labels:
+    {{- include "application-library.labels" . | nindent 4 }}
+spec:
+  podSelector:
+    matchLabels:
+    {{- include "application-library.selectorLabels" . | nindent 6 }}
+  ingress:
+    - ports:
+      - port: http
+      {{- if not .Values.networkPolicy.allowExternal }}
+      from:
+        - podSelector:
+            matchLabels:
+              {{ template "application-library.fullname" . }}-client: "true"
+          {{- if .Values.networkPolicy.explicitNamespacesSelector }}
+          namespaceSelector:
+          {{ toYaml .Values.networkPolicy.explicitNamespacesSelector | indent 12 }}
+          {{- end }}
+        - podSelector:
+            matchLabels:
+              {{- include "application-library.labels" . | nindent 14 }}
+              role: read
+      {{- end }}
+{{- end }}
+{{- end }}

@@ -16,11 +16,11 @@ mongock:
 web:
   clients:
     car:
-      url: http://car-microservice-srv.micro.svc.cluster.local
+      url: http://microservice-car.micro.svc.cluster.local
     flight:
-      url: http://flight-microservice-srv.micro.svc.cluster.local
+      url: http://microservice-flight.micro.svc.cluster.local
     hotel:
-      url: http://hotel-microservice-srv.micro.svc.cluster.local
+      url: http://microservice-hotel.micro.svc.cluster.local
 
 opentracing:
   jaeger:

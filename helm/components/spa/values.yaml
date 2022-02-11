@@ -1,62 +1,77 @@
-# Default values for java-chart-helm.
+# Default values for application-library-helm.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 # GLOBAL
 nameOverride: spa
 fullnameOverride: spa-angular
-sistema: booking
-component: frontend           # Values [api|domian|data|controller]
-namespace: spa
-#serviceAccountName: spa-admin
-
-chart:
-  name: spa
-  version: 1.0.0
-
-replicaCount: 1
+sistema: spa
+component: frontend           # [api|domian|data|controller]
+namespaceOverride: spa
 
 # IMAGE
-image:
+image:  
   repository: jsantosa
   name: spa-example
   tag: 1.0.0
   pullPolicy: Always #IfNotPresent
+  # pullSecrets: {}
 
-# DEPLOYMENT
-deployment:
-  containers:
-    containerPort: 80    
-    readinessProbe:
-      path: /
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 1
-    livenessProbe:
-      path: /
-      initialDelaySeconds: 10
-      periodSeconds: 5
-      timeoutSeconds: 1
-    requests:
-      cpu: 100m
-      memory: 90Mi
-    limits:
-      cpu: 100m
-      memory: 90Mi
+replicaCount: 1
+
+# CONTAINER PORT
+containerPort: 80    
+
+# STRATEGY UPDATE
+strategy:
+  type: RollingUpdate
+  #rollingUpdate:
+  #  maxUnavailable: 25%
+  #  maxSurge: 1
+
+# HEALTH CHECKS
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+  initialDelaySeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 2
+
+# RESOURCES
+resources:
+  requests:
+    cpu: 100m
+    memory: 90Mi
+  limits:
+    cpu: 100m
+    memory: 90Mi
+
+# ENVIRONMENT VARIABLES
+env: []
 
 # SECRETS
 secrets:
   enabled: false
   create: false
-  name: spa
+  sealedSecrets:
+    enabled: false
 
 # CONFIGMAP
 configMap:
   enabled: true
   create: true
-  name: spa-conf
+  mountPath: /etc/nginx
 
-# SERVICE 
+# SERVICE
 service:
   type: ClusterIP
   port: 80
@@ -66,27 +81,47 @@ ingress:
   public:
     enabled: false
     hosts:
-    - "*"
+      - "*"
     attempts: 3
     perTryTimeout: 2s
     ports:
-    - name: http
-      number: 80
-      protocol: HTTP
-    - name: https
-      number: 443
-      protocol: HTTP
+      - name: http
+        number: 80
+        protocol: HTTP
   private:
-    enabled: false    
-    ## Specify a path
-    #path: /path-redirect
+    enabled: false
 
 # TRAEFIK
 traefik:
   enabled: true
   path: /
 
-# SERVICE ENTRY 
+# SERVICE MONITOR 
+serviceMonitor:
+  enabled: false
+
+# SERVICE ENTRY
 serviceEntry:
   enabled: false
-  
+
+# RBAC
+rbac:
+  enabled: true
+  create: true
+
+# NETWORK POLICY
+networkPolicy:
+  enabled: false
+
+## HPA
+autoscaling:
+ enabled: false
+# minReplicas: 1
+# maxReplicas: 3
+# metrics:
+#  - type: Resource
+#    resource:
+#      name: cpu
+#      target:
+#        type: Utilization
+#        averageUtilization: 75

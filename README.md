@@ -27,7 +27,51 @@ helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 
 #  - etc...
 ```
 
-### Dashboard
+## Secrets
+
+### Gitlab
+
+```bash
+## Export Gitlab variables
+export NAMESPACE="argocd"
+export SECRETNAME="gitlab-argocd-secret"
+export GITLAB_URL=https://gitlab.com/jsa4000/gitops-argocd.git
+export GITLAB_TOKEN_NAME=gitops-argocd
+export GITLAB_TOKEN=******
+
+# Create argocd namespace if not installed previously
+kubectl create namespace argocd
+
+# Create a secret with the public and private keys
+kubectl -n "$NAMESPACE" create secret generic "$SECRETNAME" \
+  --from-literal=url="${GITLAB_URL}" \
+  --from-literal=username="${GITLAB_TOKEN_NAME}" \
+  --from-literal=password="${GITLAB_TOKEN}"
+
+# Add a custom label to notificy the controller the current active secret to use
+kubectl -n "$NAMESPACE" label secret "$SECRETNAME" argocd.argoproj.io/secret-type=repository
+```
+
+## Sealed Secret Certificates
+
+```bash
+##Set your vars
+export NAMESPACE="sealed-secrets"
+export SECRETNAME="sealed-secrets-keys"
+export PRIVATEKEY="sealed-secrets.key"
+export PUBLICKEY="sealed-secrets.crt"
+
+# Create namespace if not exists
+kubectl create namespace "$NAMESPACE"
+
+# Create a secret with the public and private keys
+kubectl -n "$NAMESPACE" create secret tls "$SECRETNAME" --cert="$PUBLICKEY" --key="$PRIVATEKEY"
+
+# Add a custom label to notificy the controller the current active secret to use
+kubectl -n "$NAMESPACE" label secret "$SECRETNAME" sealedsecrets.bitnami.com/sealed-secrets-key=active
+```
+
+## Dashboard
 
 ArgoCD provides a dashbosrd to visualize the deployments and applications.
 
@@ -231,6 +275,57 @@ spec:
           prune: true
           selfHeal: true
 ```
+
+## Observability
+
+### Metrics
+
+Serve prometheus and Grafana dashboards using port-forward
+
+```bash
+## Prometheus dashboard (http://localhost:9090)
+kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090
+
+## Grafana dashboard (http://localhost:3000) (`admin/prom-operator`)
+kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+```
+
+Install following dashboards into Grafana.
+
+> Select the same `Prometheus` source for all of them
+
+- Node Exporter Full: 1860
+- Traefik: 4475
+- Spring Boot Statistics: 6756
+- MongoDB Exporter: 2583
+
+In order to use Spring Boot Statistics, use the following data to show app information:
+
+- **Instance**. the `IP:Port` value from `targets` in Prometheus. i.e. `10.1.0.17:8080`
+- **Application**. the name of the application (`spring.application.name`) or pod-name in most cases (without the hash). i.e. `car-microservice`.
+
+Instance and Application can be gathered from the tags also:
+
+```bash
+com_example_booking_controller_seconds_max{application="booking-microservice", class="com.example.booking.controller.BookingController", container="booking", endpoint="http", exception="none", instance="10.1.0.17:8080", job="booking-microservice-srv", method="findAllBookings", namespace="micro", pod="booking-microservice-65bc7b4694-fdvhl", service="booking-microservice-srv"}
+```
+
+### Logs
+
+There are a lot ways to register logs within kubernetes by using kubernetes native tools like loki, fluentd, etc. or using agents for SaaS providers such as DataDog, Splunk, AWS CloudWatch, etc..
+
+#### Loki
+
+Access Grafana deployed by Prometheus and select Loki source.
+
+Get Logs from microservices:
+
+- Open Grafana-Loki at http://localhost:3000
+- Select left Menu Item `Explore` -> `Loki` (ComboBox)
+- Click into `Log browser` and select `namespace` -> `micro` -> `Show Logs` button, or using `{namespace="micro"}` directly in the search text.
+- Select the time range to search for the logs on the top.
+- Press `Run Query` to search all results
+- Similar to Kibana with the results filters can be added using + or -, column to view (single), etc... i.e. `{app="hotel",namespace="micro"}`
 
 ## License
 

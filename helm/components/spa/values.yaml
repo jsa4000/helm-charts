@@ -104,6 +104,19 @@ serviceMonitor:
 serviceEntry:
   enabled: false
 
+# NODE SELECTOR
+nodeSelector: {}
+
+## TOLERATIONS
+tolerations: []
+
+## AFFINITY
+affinity: 
+  highAvailability: true
+  nodeAffinity: {}
+  podAffinity: {}
+  podAntiAffinity: {}
+
 # RBAC
 rbac:
   enabled: true

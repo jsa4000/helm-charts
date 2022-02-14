@@ -3,13 +3,13 @@ entries:
   application:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.232842+01:00"
+    created: "2022-02-14T12:23:01.979376+01:00"
     dependencies:
     - name: application-library
       repository: https://jsa4000.github.io/helm-charts
       version: 1.0.0
     description: A Helm chart for Applications
-    digest: 414c619cf67907b80b3ed5123408c4a593bdc79c22b8c972c8114975e343216d
+    digest: 3c8b682fa98878c8cbf7e3133ef50fff806b732eda810c8cd2231505300aef6c
     home: https://github.com/jsa4000/helm-charts
     keywords:
     - application
@@ -28,9 +28,9 @@ entries:
   application-library:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.233926+01:00"
+    created: "2022-02-14T12:23:01.980278+01:00"
     description: A Helm chart library for Applications
-    digest: 71f5e5f07d7b78f97324a1d0ef7707cbd8f0fe542b77e4b5390b7b0ab260532c
+    digest: 57a06ea7f644712b138983a69f203ba8f0d65bae7b92b25794cb27e08aecac02
     home: https://github.com/jsa4000/helm-charts
     keywords:
     - microservice
@@ -50,7 +50,7 @@ entries:
   microservice-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.238384+01:00"
+    created: "2022-02-14T12:23:01.984233+01:00"
     dependencies:
     - name: microservice-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -74,7 +74,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.23679+01:00"
+    created: "2022-02-14T12:23:01.982264+01:00"
     dependencies:
     - name: microservice-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -99,7 +99,7 @@ entries:
   microservice-library-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.242134+01:00"
+    created: "2022-02-14T12:23:01.986813+01:00"
     description: A library Helm chart for Java Microservices
     digest: 4ed523ca39cde9b1a7c3e112e3fad251cc3a239e3e813c8e248ab46a6955dc10
     home: https://github.com/jsa4000/helm-charts
@@ -120,7 +120,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.239411+01:00"
+    created: "2022-02-14T12:23:01.98555+01:00"
     description: A library Helm chart for Java Microservices
     digest: 07167eac7b8276d94cda2d567e9652c2597de54b04fb7cbb6e76c78b054276c4
     home: https://github.com/jsa4000/helm-charts
@@ -142,7 +142,7 @@ entries:
   spa-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.244816+01:00"
+    created: "2022-02-14T12:23:01.991551+01:00"
     dependencies:
     - name: spa-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -166,7 +166,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.243499+01:00"
+    created: "2022-02-14T12:23:01.989956+01:00"
     dependencies:
     - name: spa-library-chart-java
       repository: https://jsa4000.github.io/helm-charts
@@ -191,7 +191,7 @@ entries:
   spa-library-chart-java:
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.246583+01:00"
+    created: "2022-02-14T12:23:01.995026+01:00"
     description: A library Helm chart for SPA (Single Page Application) based on Ngnix
     digest: 2353d43740d04e2471d83dbd988e525d8e07082a245a51bb390058be9dd4733f
     home: https://github.com/jsa4000/helm-charts
@@ -211,7 +211,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: 1.0.0
-    created: "2022-02-11T12:56:10.245812+01:00"
+    created: "2022-02-14T12:23:01.992675+01:00"
     description: A library Helm chart for SPA (Single Page Application) based on Ngnix
     digest: 78c5a426d2c0bb5494a1fb366ca562a58948f406aefc1040deae10b087ec503a
     home: https://github.com/jsa4000/helm-charts
@@ -229,4 +229,4 @@ entries:
     urls:
     - spa-library-chart-java-1.0.0.tgz
     version: 1.0.0
-generated: "2022-02-11T12:56:10.22855+01:00"
+generated: "2022-02-14T12:23:01.975491+01:00"

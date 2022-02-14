@@ -118,24 +118,46 @@ traefik:
 
 # SERVICE MONITOR 
 serviceMonitor:
-  enabled: false
+  enabled: true
+  release: prometheus
+  endpoints:
+  - interval: 30s
+    port: http
+    path: management/metrics
 
 # SERVICE ENTRY
 serviceEntry:
-  enabled: false
+  enabled: true
 
 # NODE SELECTOR
 nodeSelector: {}
+  # disktype: ssd
 
 ## TOLERATIONS
 tolerations: []
+# - key: "key2"
+#   operator: "Exists"
+#   effect: "NoSchedule"
 
 ## AFFINITY
 affinity: 
-  highAvailability: false
+  highAvailability: true
   nodeAffinity: {}
+  # requiredDuringSchedulingIgnoredDuringExecution:
+  #   nodeSelectorTerms:
+  #   - matchExpressions:
+  #     - key: disktype
+  #       operator: In
+  #       values:
+  #       - ssd  
   podAffinity: {}
   podAntiAffinity: {}
+  # requiredDuringSchedulingIgnoredDuringExecution:
+  # - labelSelector:
+  #     matchLabels:
+  #       app.kubernetes.io/name: notifications
+  #       app.kubernetes.io/instance: microservice  
+  #   topologyKey: kubernetes.io/hostname
 
 # RBAC
 rbac:

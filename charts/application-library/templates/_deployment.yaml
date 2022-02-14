@@ -74,7 +74,39 @@ spec:
           secret:
             secretName: {{ default (include "application-library.fullname" .) .Values.secrets.useExistingSecret }}
       {{- end }}
-{{- if .Values.rbac.enabled }}
+      {{- if .Values.rbac.enabled }}
       serviceAccountName: {{ default (include "application-library.fullname" .) .Values.rbac.useExistingServiceAccount }}
-{{- end }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        {{- with .Values.affinity.nodeAffinity }}
+        nodeAffinity:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- with .Values.affinity.podAffinity }}
+        podAffinity:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- if or .Values.affinity.highAvailability .Values.affinity.podAntiAffinity}}
+        podAntiAffinity:
+        {{- if .Values.affinity.highAvailability }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    {{- include "application-library.selectorLabels" . | nindent 20 }}  
+                topologyKey: kubernetes.io/hostname
+              weight: 100
+        {{- end }}
+        {{- with .Values.affinity.podAntiAffinity }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
+        {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
 {{- end }}

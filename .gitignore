@@ -6,8 +6,10 @@
 # Chart dependencies
 **/charts/*.tgz
 /charts/*/charts
+/examples/*/charts
 *.tgz
 *.lock
+*-template.*
 index.yaml
 
 ### Intellij ###

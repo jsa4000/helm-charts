@@ -118,7 +118,12 @@ traefik:
 
 # SERVICE MONITOR 
 serviceMonitor:
-  enabled: false
+  enabled: true
+  release: prometheus
+  endpoints:
+  - interval: 30s
+    port: http
+    path: management/metrics
 
 # SERVICE ENTRY
 serviceEntry:

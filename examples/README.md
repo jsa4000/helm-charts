@@ -53,11 +53,24 @@ kubectl -n kube-system delete helmcharts.helm.cattle.io traefik
 ## Install Charts
 
 ```bash
-# Install microservice chart
+# Install microservice chart (default values.yaml file)
 helm3 install microservice -n micro --create-namespace --dependency-update microservice 
+
+# Install microservice chart using specific value file (microservice/values-placement.yaml )
+helm3 install microservice -n micro --create-namespace --dependency-update microservice -f microservice/values-placement.yaml 
 
 # Install spa chart
 helm3 install spa -n spa --create-namespace --dependency-update spa
+```
+
+## Debug Charts
+
+```bash
+# Get microservice chart Manifest generated
+helm3 template microservice -n micro --create-namespace --dependency-update microservice > microservice-template.yaml
+
+# Get spa chart Manifest generated
+helm3 template spa -n spa --create-namespace --dependency-update spa  > spa-template.yaml
 ```
 
 ## Verify installation

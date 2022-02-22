@@ -1,0 +1,15 @@
+resources: 
+- ../base
+
+#namePrefix: demo-
+namespace: database
+images:
+- name: mcr.microsoft.com/mssql/server
+  newName: mcr.microsoft.com/mssql/server
+  newTag: 2019-CU15-ubuntu-20.04
+
+patchesStrategicMerge:
+- patch-statefulset.yaml
+
+transformers:
+- global-labels.yaml

@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mssql
+  labels:
+    app.kubernetes.io/name: mssql
+spec:
+  serviceName: mssql
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mssql
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mssql
+    spec:
+      serviceAccountName: mssql
+      securityContext:
+        fsGroup: 10001
+      containers:
+        - name: mssql
+          command:
+            - /bin/bash
+            - -c
+            - cp /var/opt/config/mssql.conf /var/opt/mssql/mssql.conf && /opt/mssql/bin/sqlservr
+          image: mcr.microsoft.com/mssql/server:2019-latest
+          imagePullPolicy: IfNotPresent
+          ports:
+           - containerPort: 1433
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1000M
+            limits:
+              cpu: 1000m
+              memory: 2000M
+          env:
+           - name: MSSQL_PID
+             value: "Developer"
+           - name: ACCEPT_EULA
+             value: "Y"
+           - name: MSSQL_AGENT_ENABLED
+             value: "false"
+           - name: SA_PASSWORD
+             valueFrom:
+              secretKeyRef:
+               name: mssql
+               key: password 
+          volumeMounts:
+           - name: mssql-data-volume
+             mountPath: /var/opt/mssql
+           - name: mssql-config-volume
+             mountPath: /var/opt/config
+      volumes:        
+      - name: mssql-config-volume
+        configMap:
+         name: mssql
+      - name: mssql-data-volume
+        persistentVolumeClaim:
+          claimName: mssql
+

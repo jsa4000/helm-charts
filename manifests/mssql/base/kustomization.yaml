@@ -1,0 +1,9 @@
+resources:
+- configmap.yaml
+- pvc.yaml            
+- secret.yaml         
+- service.yaml        
+- serviceaccount.yaml 
+- statefulset.yaml
+
+

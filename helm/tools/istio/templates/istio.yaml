@@ -8,3 +8,9 @@ spec:
   addonComponents:
     prometheus:
       enabled: true
+    kiali:
+      enabled: true
+    grafana:
+      enabled: true
+    tracing:
+      enabled: true

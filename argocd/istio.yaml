@@ -1,19 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: flight-microservice
+  name: istio
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/sync-wave: "-1"
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: booking-project
+  project: default # booking-project
   destination:
     server: https://kubernetes.default.svc
-    namespace: micro
+    namespace: istio-system
   source:
-    path: helm/components/flight
+  source:
+    path: helm/tools/istio
     repoURL: https://github.com/jsa4000/helm-charts.git
     targetRevision: deploy-istio
   syncPolicy:

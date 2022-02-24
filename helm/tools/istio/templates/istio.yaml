@@ -5,12 +5,3 @@ metadata:
   namespace: istio-system
 spec:
   profile: default
-  addonComponents:
-    prometheus:
-      enabled: true
-    kiali:
-      enabled: true
-    grafana:
-      enabled: true
-    tracing:
-      enabled: true

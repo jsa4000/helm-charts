@@ -1,10 +1,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: istio
+  name: istio-tools
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1"
+    argocd.argoproj.io/sync-wave: "0"
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
@@ -13,7 +13,7 @@ spec:
     server: https://kubernetes.default.svc
     namespace: istio-system
   source:
-    path: helm/tools/istio
+    path: manifests/istio-tools
     repoURL: https://github.com/jsa4000/helm-charts.git
     targetRevision: deploy-istio
   syncPolicy:

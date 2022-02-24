@@ -63,6 +63,8 @@ env:
   value: -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80  
 - name: SPRING_CONFIG_ADDITIONAL_LOCATION
   value: file:/opt/app/config/application.yml
+- name: OPENTRACING_JAEGER_ENABLED
+  value: "false"
 - name: SECRET_JWT_PUBLIC_KEY
   valueFrom:
     secretKeyRef:
@@ -118,7 +120,7 @@ traefik:
 
 # SERVICE MONITOR 
 serviceMonitor:
-  enabled: true
+  enabled: false
   release: prometheus
   endpoints:
   - interval: 30s

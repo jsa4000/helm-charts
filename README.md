@@ -80,6 +80,8 @@ kubectl -n "$NAMESPACE" create secret tls "$SECRETNAME" --cert="$PUBLICKEY" --ke
 kubectl -n "$NAMESPACE" label secret "$SECRETNAME" sealedsecrets.bitnami.com/sealed-secrets-key=active
 ```
 
+Alternatively run `./create_secrets.sh` to create the secrets automatically.
+
 ## Dashboard
 
 ArgoCD provides a dashbosrd to visualize the deployments and applications.

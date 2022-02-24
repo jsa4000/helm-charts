@@ -79,7 +79,7 @@ service:
 # INGRESS
 ingress: 
   public:
-    enabled: false
+    enabled: true
     hosts:
       - "*"
     attempts: 3
@@ -93,7 +93,7 @@ ingress:
 
 # TRAEFIK
 traefik:
-  enabled: true
+  enabled: false
   path: /
 
 # SERVICE MONITOR 

@@ -27,6 +27,15 @@ helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 
 #  - etc...
 ```
 
+## Istio in Rancher K3s
+
+Uninstall default `traefik` from K3s
+
+```bash
+# Uninstall traefik from K3s
+kubectl -n kube-system delete helmcharts.helm.cattle.io traefik
+```
+
 ## Secrets
 
 ### Gitlab

@@ -8,7 +8,7 @@ metadata:
   finalizers:
   - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default # booking-project
+  project: booking-project
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system

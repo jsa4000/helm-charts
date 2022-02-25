@@ -10,4 +10,4 @@ kind: Namespace
 metadata:
   labels:
     istio-injection: enabled
-  name: spas
+  name: spa

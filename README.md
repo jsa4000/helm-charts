@@ -338,6 +338,12 @@ Get Logs from microservices:
 - Press `Run Query` to search all results
 - Similar to Kibana with the results filters can be added using + or -, column to view (single), etc... i.e. `{app="hotel",namespace="micro"}`
 
+Grafana must be configured to get logs from loki.
+
+- Open Grafana daash boar using port-forward command or `istioctl dashboard grafana`
+- Create a `Loki` data source
+- Use following URL to point to the active loki Pod `http://loki-0.loki-headless.monitoring.svc.cluster.local:3100`
+
 ## License
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->

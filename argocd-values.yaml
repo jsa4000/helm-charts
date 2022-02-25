@@ -1,0 +1,32 @@
+
+redis-ha:
+  enabled: false
+
+controller:
+  enableStatefulSet: false
+
+server:
+  autoscaling:
+    enabled: false
+  config:
+    url: https://argocd.example.com
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    resource.customizations.useOpenLibs.install.istio.io_IstioOperator: "true"
+    resource.customizations.health.install.istio.io_IstioOperator: |
+          hs = {}
+          if obj.status ~= nil then
+            if obj.status.status == "HEALTHY" then
+              hs.status = "Healthy"
+              hs.message = "IstioOperator Ready"
+              return hs
+            end
+          end
+
+          hs.status = "Progressing"
+          hs.message = "Waiting for IstioOperator"
+          return hs
+
+repoServer:
+  autoscaling:
+    enabled: false
+

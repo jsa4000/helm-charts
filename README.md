@@ -20,6 +20,9 @@ helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 
   --set server.autoscaling.enabled=false \
   --set repoServer.autoscaling.enabled=false
 
+# Deploy argocd with custom health checks to wait until resources are healthy
+helm3 install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 -f argocd-values.yaml
+
 # Take a look different ways to deploy ArgoCD: 
 #  - Non HA-Mode
 #  - HA-Mode With Autoscaling

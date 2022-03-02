@@ -7,12 +7,9 @@ kubectl -n kube-system delete helmcharts.helm.cattle.io traefik
 cd certs;./create_secrets.sh;cd ..
 
 # Install ArgoCD using helm chart
-echo Installing ArgoCD from chart
+echo Installing ArgoCD from Helm Chart using 'argocd-values.yaml'
 helm install argocd -n argocd --create-namespace argo/argo-cd --version 3.33.5 \
-  --set redis-ha.enabled=false \
-  --set controller.enableStatefulSet=false \
-  --set server.autoscaling.enabled=false \
-  --set repoServer.autoscaling.enabled=false \
+  -f argocd-values.yaml \ 
   --wait
 
 # Create ArgoCD project and Root App (App of Apps)

@@ -121,7 +121,7 @@ traefik:
 # SERVICE MONITOR 
 serviceMonitor:
   enabled: true
-  release: prometheus
+  release: prometheus-stack
   endpoints:
   - interval: 30s
     port: http

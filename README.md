@@ -298,10 +298,10 @@ Serve prometheus and Grafana dashboards using port-forward
 
 ```bash
 ## Prometheus dashboard (http://localhost:9090)
-kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus 9090
+kubectl port-forward -n monitoring svc/prometheus-stack-kube-prom-prometheus 9090
 
 ## Grafana dashboard (http://localhost:3000) (`admin/prom-operator`)
-kubectl port-forward -n monitoring svc/prometheus-grafana 3000:80
+kubectl port-forward -n monitoring svc/prometheus-stack-grafana 3000:80
 ```
 
 Install following dashboards into Grafana.

@@ -155,6 +155,16 @@ curl -X POST "http://localhost/booking/bookings" \
 -d $CREATE_ALL_BOOKING_DATA \
 | jq .
 
+# Perform the Request each 2 seconds
+while true; do
+echo "\n"Sending Booking Request 
+curl -X POST "http://localhost/booking/bookings" \
+-H  "accept: application/json" \
+-H  "Content-Type: application/json" \
+-d $CREATE_ALL_BOOKING_DATA
+sleep 2
+done
+
 # Set json data to send into the request
 export CREATE_CAR_BOOKING_DATA='{
   "active": false,

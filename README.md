@@ -1,7 +1,17 @@
-# ArgoCD
+# Deploy Istio With ArgoCD
+
+In order to install all the components use the following command
+
+```bash
+# Use following command to bootstrap the components
+./init.sh
+```
+
+## ArgoCD
 
 Install ArgoCD using Helm Charts. This is needed to deploy ArgoCD CRDs.
 After the installation ArgoCD will be managed by itself (lifecycle) since it is configured as custom Application in `argocd/argocd.yaml`
+
 
 ```bash
 # Add Helm Repo

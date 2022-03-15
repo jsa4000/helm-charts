@@ -148,6 +148,8 @@ Metrics
 
 > There are [dashboards](https://grafana.com/grafana/dashboards/) available for `Istio`, `Mongodb`, `Spring Applications`, and other `providers`.
 
+> To use Istio metrics it can be used `Prometheus/Grafana` installedd by Istio (samples), `istioctl dashboard grafana`. Since Prometheus is a decentralized database for timeseries (see `Thanos` or `Cortex` projects for HA, longer retention etc..) is common to see multiples Prometheus instances monitoring different workloads or namespaces.
+
 Logs
 
 1. Open Grafana

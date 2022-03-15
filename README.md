@@ -12,7 +12,6 @@ In order to install all the components use the following command
 Install ArgoCD using Helm Charts. This is needed to deploy ArgoCD CRDs.
 After the installation ArgoCD will be managed by itself (lifecycle) since it is configured as custom Application in `argocd/argocd.yaml`
 
-
 ```bash
 # Add Helm Repo
 helm3 repo add argo https://argoproj.github.io/argo-helm
@@ -356,6 +355,29 @@ Grafana must be configured to get logs from loki.
 - Open Grafana daash boar using port-forward command or `istioctl dashboard grafana`
 - Create a `Loki` data source
 - Use following URL to point to the active loki Pod `http://loki-0.loki-headless.monitoring.svc.cluster.local:3100`
+
+### Istio
+
+In order to use istio tools, it is recommended to use `istioctl` command line.
+
+> Open three different terminals to open istio tools.
+
+```bash
+# Kiali Dashboards
+istioctl dashboard kiali
+
+# Jaeger Dashboard
+istioctl dashboard jaeger
+
+# Prometheus Dashboard
+istioctl dashboard prometheus
+
+# Grafana Dashboard
+istioctl dashboard grafana
+
+# [BETTER] Grafana Dashboard (from Prometheus Stack)
+kubectl port-forward -n monitoring svc/prometheus-stack-grafana 3000:80
+```
 
 ## License
 
